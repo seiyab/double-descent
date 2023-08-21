@@ -16,15 +16,13 @@ def main():
     print(f(x))
     print(y)
     print(r(x))
-    ...
 
-    # pred = a.T @ z
-    # diff = (a.T @ z).T - y
-    # loss = ((a.T @ z).T - y).T @ ((a.T @ z).T - y)
-    # loss = (z.T @ a - y).T @ (z.T @ a - y)
-    # dlda = 2 * z @ (z.T @ a - y)
-    # z @ y = z @ z.T @ a
-    # (z @ z.T).inv @ z @ y = a
+    x_eval = np.random.uniform(size=20)
+    y_eval = f(x_eval)
+
+    for d in range(1, 21):
+        r = LinearRegressor.fit(x, y, PolynomialBasis(d))
+        print(loss(x_eval, y_eval, r))
 
 
 class Func(ABC):
@@ -77,6 +75,12 @@ class LinearRegressor:
 
     def __call__(self, x: np.ndarray) -> float:
         return self.w @ self.b(x)
+
+
+def loss(x: np.ndarray, y: np.ndarray, f) -> float:
+    pred = f(x)
+    diff = y - pred
+    return diff @ diff.T
 
 
 main()
