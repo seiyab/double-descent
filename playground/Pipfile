@@ -14,3 +14,7 @@ black = "*"
 [requires]
 python_version = "3.11"
 python_full_version = "3.11.4"
+
+[scripts]
+check = "bash -c 'git ls-files \"*.py\" | xargs black --check'"
+format = "bash -c 'git ls-files \"*.py\" | xargs black'"
