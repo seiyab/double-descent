@@ -22,7 +22,10 @@ def main():
 
     for d in range(1, 21):
         r = LinearRegressor.fit(x, y, PolynomialBasis(d))
-        print(loss(x_eval, y_eval, r))
+        print(
+            loss(x, y, r),
+            loss(x_eval, y_eval, r),
+        )
 
 
 class Func(ABC):
@@ -59,7 +62,7 @@ class PolynomialBasis(Basis):
         return np.array([x**k for k in range(0, self.d + 1)])
 
     def dim(self) -> int:
-        return self.d
+        return self.d + 1
 
 
 @dataclass
@@ -69,8 +72,7 @@ class LinearRegressor:
 
     @staticmethod
     def fit(x: np.ndarray, y: np.ndarray, b: Basis) -> Self:
-        feat = np.array([b(x_i) for x_i in x])
-        w = linalg.inv(feat.T @ feat) @ feat.T @ y
+        w, *_ = linalg.lstsq(b(x).T, y)
         return LinearRegressor(w=w, b=b)
 
     def __call__(self, x: np.ndarray) -> float:
